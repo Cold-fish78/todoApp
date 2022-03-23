@@ -1,7 +1,17 @@
 import 'package:flutter/material.dart';
+import '../models/tasks.dart';
+import 'add_task_screen.dart';
+import 'package:todo/widgets/tasks_list.dart';
 
-class TasksScreen extends StatelessWidget {
-  const TasksScreen({Key? key}) : super(key: key);
+class TasksScreen extends StatefulWidget {
+  @override
+  State<TasksScreen> createState() => _TasksScreenState();
+}
+
+class _TasksScreenState extends State<TasksScreen> {
+  List<Task> tasks = [
+
+  ];
 
   @override
   Widget build(BuildContext context) {
@@ -35,31 +45,40 @@ class TasksScreen extends StatelessWidget {
                       fontWeight: FontWeight.w700),
                 ),
                 Text(
-                  '12 tasks',
+                  '${tasks.length} tasks',
                   style: TextStyle(
                     color: Colors.white,
                     fontSize: 18,
                   ),
                 ),
-
               ],
             ),
           ),
           Expanded(
             child: Container(
+              padding: EdgeInsets.symmetric(horizontal: 20),
+              child: TasksList(tasks),
               decoration: BoxDecoration(
                   color: Colors.white,
-                  borderRadius: BorderRadius.only(topLeft: Radius.circular(20),topRight: Radius.circular(20))
-              ),
+                  borderRadius: BorderRadius.only(
+                      topLeft: Radius.circular(20),
+                      topRight: Radius.circular(20))),
             ),
           )
         ],
-
       ),
       floatingActionButton: FloatingActionButton(
         backgroundColor: Colors.lightBlueAccent,
-        onPressed: (){
-          print('floating action pressed');
+        onPressed: () {
+          showModalBottomSheet(
+              context: context, builder: (context) => AddTaskScreen((newValue){
+                      print(newValue);
+                setState(() {
+
+                  tasks.add(Task(name: newValue, isDone: false));
+                });
+                Navigator.pop(context);
+          }));
         },
         child: Icon(Icons.add),
       ),
